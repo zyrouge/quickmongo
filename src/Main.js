@@ -164,8 +164,8 @@ class Database extends Base {
                 if (!add) {
                     return this.set(key, value);
                 } else {
-                    if (typeof add.data !== "number") throw new Error("Target is not a number!");
-                    return this.set(key, add.data + value);
+                    if (typeof add !== "number") throw new Error("Target is not a number!");
+                    return this.set(key, add + value);
                 }
                 break;
 
@@ -176,8 +176,8 @@ class Database extends Base {
                 if (!less) {
                     return this.set(key, value);
                 } else {
-                    if (typeof less.data !== "number") throw new Error("Target is not a number!");
-                    return this.set(key, less.data - value);
+                    if (typeof less !== "number") throw new Error("Target is not a number!");
+                    return this.set(key, less - value);
                 }
                 break;
 
@@ -188,8 +188,8 @@ class Database extends Base {
                 if (!mul) {
                     return this.set(key, value);
                 } else {
-                    if (typeof mul.data !== "number") throw new Error("Target is not a number!");
-                    return this.set(key, mul.data * value);
+                    if (typeof mul !== "number") throw new Error("Target is not a number!");
+                    return this.set(key, mul * value);
                 }
                 break;
 
@@ -200,8 +200,8 @@ class Database extends Base {
                 if (!div) {
                     return this.set(key, value);
                 } else {
-                    if (typeof div.data !== "number") throw new Error("Target is not a number!");
-                    return this.set(key, div.data / value);
+                    if (typeof div !== "number") throw new Error("Target is not a number!");
+                    return this.set(key, div / value);
                 }
                 break;
             default:
@@ -390,7 +390,6 @@ class Database extends Base {
     async type(key) {
         if (!Util.isKey(key)) throw new Error("Invalid Key!", "KeyError");
         let fetched = await this.get(key);
-        if (fetched === null) return null;
         if (Array.isArray(fetched)) return "array";
         return typeof fetched;
     }

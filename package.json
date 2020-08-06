@@ -1,6 +1,6 @@
 {
   "name": "quickmongo",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Quick mongodb wrapper for beginners.",
   "main": "index.js",
   "scripts": {
@@ -30,6 +30,6 @@
   },
   "devDependencies": {
     "jsdoc": "^3.6.5",
-    "jsdoc-skyceil": "^1.0.4"
+    "jsdoc-skyceil": "github:Zyrouge/jsdoc-skyceil"
   }
 }
