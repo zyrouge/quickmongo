@@ -11,8 +11,9 @@ class Database extends Base {
 
     /**
      * Creates quickmongo instance
-     * @param {String} mongodbURL Mongodb database url
-     * @param {String} name Schema name
+     * @param {string} mongodbURL Mongodb database url
+     * @param {string} name Schema name
+     * @param {object} connectionOptions Mongoose connection options
      * @example const { Database } = require("quickmongo");
      * const db = new Database("mongodb://localhost/quickmongo");
      */
@@ -28,8 +29,8 @@ class Database extends Base {
 
     /**
      * Sets the value to the database
-     * @param {String} key Key
-     * @param {*} value Data
+     * @param {string} key Key
+     * @param value Data
      * @example db.set("foo", "bar").then(() => console.log("Saved data"));
      */
     async set(key, value) {
@@ -60,7 +61,7 @@ class Database extends Base {
 
     /**
      * Deletes a data from the database
-     * @param {String} key Key
+     * @param {string} key Key
      * @example db.delete("foo").then(() => console.log("Deleted data"));
      */
     async delete(key) {
@@ -74,7 +75,7 @@ class Database extends Base {
 
     /**
      * Checks if there is a data stored with the given key
-     * @param {String} key Key
+     * @param {string} key Key
      * @example db.exists("foo").then(console.log);
      */
     async exists(key) {
@@ -85,7 +86,7 @@ class Database extends Base {
 
     /**
      * Checks if there is a data stored with the given key
-     * @param {String} key Key
+     * @param {string} key Key
      * @example db.has("foo").then(console.log);
      */
     async has(key) {
@@ -94,7 +95,7 @@ class Database extends Base {
 
     /**
      * Fetches the data from database
-     * @param {String} key Key
+     * @param {string} key Key
      * @example db.get("foo").then(console.log);
      */
     async get(key) {
@@ -109,7 +110,7 @@ class Database extends Base {
 
     /**
      * Fetches the data from database
-     * @param {String} key Key
+     * @param {string} key Key
      * @example db.fetch("foo").then(console.log);
      */
     async fetch(key) {
@@ -146,9 +147,9 @@ class Database extends Base {
 
     /**
      * Math calculation
-     * @param {String} key Key of the data
-     * @param {String} operator One of +, -, * or /
-     * @param {Number} value Value
+     * @param {string} key Key of the data
+     * @param {string} operator One of +, -, * or /
+     * @param {number} value Value
      * @example db.math("items", "+", 200).then(() => console.log("Added 200 items"));
      */
     async math(key, operator, value) {
@@ -159,48 +160,48 @@ class Database extends Base {
         switch(operator) {
             case "add":
             case "+":
-                let add = await this.schema.findOne({ ID: key });
+                let add = await this.get(key);
                 if (!add) {
                     return this.set(key, value);
                 } else {
-                    if (typeof add.data !== "number") throw new Error("Target is not a number!");
-                    return this.set(key, add.data + value);
+                    if (typeof add !== "number") throw new Error("Target is not a number!");
+                    return this.set(key, add + value);
                 }
                 break;
 
             case "subtract":
             case "sub":
             case "-":
-                let less = await this.schema.findOne({ ID: key });
+                let less = await this.get(key);
                 if (!less) {
                     return this.set(key, value);
                 } else {
-                    if (typeof less.data !== "number") throw new Error("Target is not a number!");
-                    return this.set(key, less.data - value);
+                    if (typeof less !== "number") throw new Error("Target is not a number!");
+                    return this.set(key, less - value);
                 }
                 break;
 
             case "multiply":
             case "mul":
             case "*":
-                let mul = await this.schema.findOne({ ID: key });
+                let mul = await this.get(key);
                 if (!mul) {
                     return this.set(key, value);
                 } else {
-                    if (typeof mul.data !== "number") throw new Error("Target is not a number!");
-                    return this.set(key, mul.data * value);
+                    if (typeof mul !== "number") throw new Error("Target is not a number!");
+                    return this.set(key, mul * value);
                 }
                 break;
 
             case "divide":
             case "div":
             case "/":
-                let div = await this.schema.findOne({ ID: key });
+                let div = await this.get(key);
                 if (!div) {
                     return this.set(key, value);
                 } else {
-                    if (typeof div.data !== "number") throw new Error("Target is not a number!");
-                    return this.set(key, div.data / value);
+                    if (typeof div !== "number") throw new Error("Target is not a number!");
+                    return this.set(key, div / value);
                 }
                 break;
             default:
@@ -210,8 +211,8 @@ class Database extends Base {
 
     /**
      * Add
-     * @param {String} key key
-     * @param {Number} value value
+     * @param {string} key key
+     * @param {number} value value
      * @example db.add("items", 200).then(() => console.log("Added 200 items"));
      */
     async add(key, value) {
@@ -220,8 +221,8 @@ class Database extends Base {
 
     /**
      * Subtract
-     * @param {String} key Key
-     * @param {Number} value Value     
+     * @param {string} key Key
+     * @param {number} value Value     
      * @example db.subtract("items", 100).then(() => console.log("Removed 100 items"));
      */
     async subtract(key, value) {
@@ -230,7 +231,7 @@ class Database extends Base {
 
     /**
      * Returns database uptime
-     * @type {Number}
+     * @type {number}
      * @example console.log(`Database is up for ${db.uptime} ms.`);
      */
     get uptime() {
@@ -241,9 +242,9 @@ class Database extends Base {
 
     /**
      * Exports the data to json file
-     * @param {String} fileName File name
-     * @param {String} path File path
-     * @returns {Promise<String>}
+     * @param {string} fileName File name
+     * @param {string} path File path
+     * @returns {Promise<string>}
      * @example db.export("database", "./").then(path => {
      *     console.log(`File exported to ${path}`);
      * });
@@ -292,7 +293,6 @@ class Database extends Base {
             this.set(item.ID, item.data);
             this.emit("debug", `Successfully migrated ${item.ID} @${index}!`);      
         });
-        this.set(item.ID, item.data);
         this.emit("debug", `Successfully migrated ${data.length}. Took ${Date.now() - start}ms!`);
         return;
     }
@@ -307,11 +307,22 @@ class Database extends Base {
     }
 
     /**
+     * Creates database connection.
+     * 
+     * You don't need to call this method because it is automatically called by database manager.
+     * 
+     * @param {string} url Database url
+     */
+    connect(url) {
+        return this._create(url);
+    }
+
+    /**
      * Returns current schema name
      * @readonly
      */
     get name() {
-        return this.schema.name;
+        return this.schema.modelName;
     }
 
     /**
@@ -347,6 +358,117 @@ class Database extends Base {
         let average = (read + write) / 2;
         this.delete("LQ==").catch(e => {});
         return { read, write, average };
+    }
+
+    /**
+     * Fetches read and write latency of the database in ms
+     * @example const ping = await db.ping();
+     * console.log("Read: ", ping.read);
+     * console.log("Write: ", ping.write);
+     * console.log("Average: ", ping.average);
+     */
+    async ping() {
+        return await this.fetchLatency();
+    }
+
+    /**
+     * Fetches everything and sorts by given target
+     * @param {string} key Key
+     * @param {object} ops Options
+     * @example const data = await db.startsWith("money", { sort: ".data" });
+     */
+    async startsWith(key, ops) {
+        if (!key || typeof key !== "string") throw new Error(`Expected key to be a string, received ${typeof key}`);
+        let all = await this.all();
+        return Util.sort(key, all, ops);
+    }
+
+    /**
+     * Resolves data type
+     * @param {string} key key
+     */
+    async type(key) {
+        if (!Util.isKey(key)) throw new Error("Invalid Key!", "KeyError");
+        let fetched = await this.get(key);
+        if (Array.isArray(fetched)) return "array";
+        return typeof fetched;
+    }
+
+    /**
+     * Returns array of the keys
+     * @example const keys = await db.keyarray();
+     * console.log(keys);
+     */
+    async keyArray() {
+        const data = await this.all();
+        return data.map(m => m.ID);
+    }
+
+    /**
+     * Returns array of the values
+     * @example const data = await db.valueArray();
+     * console.log(data);
+     */
+    async valueArray() {
+        const data = await this.all();
+        return data.map(m => m.data);
+    }
+
+    /**
+     * Pushes an item into array
+     * @param {string} key key
+     * @param {any|Array} value Value to push
+     * @example db.push("users", "John"); // -> ["John"]
+     * db.push("users", ["Milo", "Simon", "Kyle"]); // -> ["John", "Milo", "Simon", "Kyle"]
+     */
+    async push(key, value) {
+        const data = await this.get(key);
+        if (data == null) {
+            if (!Array.isArray(value)) return await this.set(key, [value]);
+            return await this.set(key, value);
+        }
+        if (!Array.isArray(data)) throw new Error(`Expected target type to be Array, received ${typeof data}!`);
+        if (Array.isArray(value)) return await this.set(key, data.concat(value));
+        data.push(value);
+        return await this.set(key, data);
+    }
+
+    /**
+     * Removes an item from array
+     * @param {string} key key
+     * @param {any|Array} value item to remove
+     * @example db.pull("users", "John"); // -> ["Milo", "Simon", "Kyle"]
+     * db.pull("users", ["Milo", "Simon"]); // -> ["Kyle"]
+     */
+    async pull(key, value) {
+        let data = await this.get(key);
+        if (data === null) return false;
+        if (!Array.isArray(data)) throw new Error(`Expected target type to be Array, received ${typeof data}!`);
+        if (Array.isArray(value)) {
+            data = data.filter(i => !value.includes(i));
+            return await this.set(key, data);
+        } else {
+            data = data.filter(i => i !== value);
+            return await this.set(key, data);
+        }
+    }
+
+    /**
+     * String representation of the database
+     * @example console.log(`Current database: ${db}`);
+     */
+    toString() {
+        return `${this.name}`;
+    }
+
+    /**
+     * Allows you to eval code using `this` keyword.
+     * @param {string} code code to eval
+     * @example
+     * db._eval("this.all().then(console.log)"); // -> [{ ID: "...", data: ... }, ...]
+     */
+    _eval(code) {
+        return eval(code);
     }
 
 }

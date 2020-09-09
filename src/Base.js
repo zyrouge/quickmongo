@@ -7,9 +7,8 @@ class Base extends EventEmitter {
     /**
      * Instantiates the base database.
      * This class is implemented by the main Database class.
-     * @param {String} mongodbURL Mongodb Database URL.
-     * @param {Object} connectionOptions Mongodb connection options
-     * @returns {Base}
+     * @param {string} mongodbURL Mongodb Database URL.
+     * @param {object} connectionOptions Mongodb connection options
      * @example const db = new Base("mongodb://localhost/mydb");
      */
     constructor(mongodbURL, connectionOptions={}) {
@@ -20,13 +19,13 @@ class Base extends EventEmitter {
 
         /**
          * Current database url
-         * @type {String}
+         * @type {string}
          */
         this.dbURL = mongodbURL;
 
         /**
          * Mongoose connection options
-         * @type {Object}
+         * @type {object}
          */
         this.options = connectionOptions;
 
@@ -47,10 +46,12 @@ class Base extends EventEmitter {
 
     /**
      * Creates mongodb connection
-     * @private
+     * @ignore
      */
-    _create() {
-        this.emit("Creating database connection...");
+    _create(url) {
+        this.emit("debug", "Creating database connection...");
+        if (url && typeof url === "string") this.dbURL = url;
+        if (!this.dbURL || typeof this.dbURL !== "string") throw new Error("Database url was not provided!", "MongoError");
         mongoose.connect(this.dbURL, {
             useNewUrlParser: true,
             useUnifiedTopology: true
@@ -59,13 +60,21 @@ class Base extends EventEmitter {
 
     /**
      * Destroys database
-     * @private
+     * @ignore
      */
     _destroyDatabase() {
         mongoose.disconnect();
         this.readyAt = undefined;
         this.dbURL = null;
         this.emit("debug", "Database disconnected!");
+    }
+    
+    /**
+     * Current database url
+     * @type {string}
+     */
+    get url() {
+        return this.dbURL;
     }
 }
 

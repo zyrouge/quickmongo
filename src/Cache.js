@@ -19,9 +19,9 @@ class MemoryStorage {
 
     /**
      * Sets the data in cache
-     * @param {String} key Key for the data
-     * @param {any} value Value
-     * @returns {any}
+     * @param {string} key Key for the data
+     * @param value Value
+     * @example db.set("foo", "bar");
      */
     set(key, value) {
         if (!Util.isKey(key)) throw new Error("Invalid key specified!", "KeyError");
@@ -37,8 +37,8 @@ class MemoryStorage {
 
     /**
      * deletes an item from the cache
-     * @param {String} key Key
-     * @returns {any}
+     * @param {string} key Key
+     * @example db.delete("foo");
      */
     delete(key) {
         if (!Util.isKey(key)) throw new Error("Invalid key specified!", "KeyError");
@@ -49,8 +49,9 @@ class MemoryStorage {
 
     /**
      * Checks if the key exists in cache or not
-     * @param {String} key Key
-     * @returns {Boolean}
+     * @param {string} key Key
+     * @returns {boolean}
+     * @example db.exists("foo");
      */
     exists(key) {
         if (!Util.isKey(key)) throw new Error("Invalid key specified!", "KeyError");
@@ -59,8 +60,9 @@ class MemoryStorage {
 
     /**
   * Checks if the key exists in cache or not
-  * @param {String} key Key
-  * @returns {Boolean}
+  * @param {string} key Key
+  * @returns {boolean}
+  * @example db.has("foo");
   */
     has(key) {
         return this.exists(key);
@@ -68,8 +70,8 @@ class MemoryStorage {
 
     /**
      * Returns the data of the matching key
-     * @param {String} key Key
-     * @returns {any}
+     * @param {string} key Key
+     * @example db.get("foo");
      */
     get(key) {
         if (!Util.isKey(key)) throw new Error("Invalid key specified!", "KeyError");
@@ -80,8 +82,8 @@ class MemoryStorage {
 
     /**
      * Returns the data of the matching key
-     * @param {String} key Key
-     * @returns {any}
+     * @param {string} key Key
+     * @example db.fetch("foo");
      */
     fetch(key) {
         return this.get(key);
@@ -90,7 +92,7 @@ class MemoryStorage {
 
     /**
      * Returns everything from the cache
-     * @returns {any}
+     * @example db.all();
      */
     all() {
         return this.obj;
@@ -98,7 +100,7 @@ class MemoryStorage {
 
     /**
      * Deletes everything from the cache
-     * @returns {any}
+     * @example db.deleteAll();
      */
     deleteAll() {
         this.obj = [];
@@ -107,9 +109,9 @@ class MemoryStorage {
 
     /**
      * Exports the data to json file
-     * @param {String} fileName File name
-     * @param {String} path File path
-     * @returns {Promise<String>}
+     * @param {string} fileName File name
+     * @param {string} path File path
+     * @returns {Promise<string>}
      * @example db.export("database", "./").then(path => {
      *     console.log(`File exported to ${path}`);
      * });
@@ -127,6 +129,18 @@ class MemoryStorage {
                 reject(e);
             }
         });
+    }
+
+    /**
+     * Fetches everything and sorts by given target
+     * @param {string} key Key
+     * @param {object} ops Options
+     * @example const data = await db.startsWith("money", { sort: ".data" });
+     */
+    startsWith(key, ops) {
+        if (!key || typeof key !== "string") throw new Error(`Expected key to be a string, received ${typeof key}`);
+        let all = this.all();
+        return Util.sort(key, all, ops);
     }
 
 }
