@@ -14,7 +14,7 @@ class Util {
     /**
      * Returns true if provided key is valid
      * @param {any} str Anything to test
-     * @returns {Boolean}
+     * @returns {boolean}
      */
     static isKey(str) {
         return typeof str === "string";
@@ -23,7 +23,7 @@ class Util {
     /**
      * Returns true if the given data is valid
      * @param {any} data Any data
-     * @returns {Boolean}
+     * @returns {boolean}
      */
     static isValue(data) {
         if (data === Infinity || data === -Infinity) return false;
@@ -51,7 +51,7 @@ class Util {
     /**
      * Sort data
      * @param {string} key Key
-     * @param {Array} data Data
+     * @param {any[]} data Data
      * @param {object} ops options
      * @example Util.sort("user_", {...}, { sort: ".data" });
      */

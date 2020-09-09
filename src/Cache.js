@@ -59,11 +59,11 @@ class MemoryStorage {
     }
 
     /**
-  * Checks if the key exists in cache or not
-  * @param {string} key Key
-  * @returns {boolean}
-  * @example db.has("foo");
-  */
+     * Checks if the key exists in cache or not
+     * @param {string} key Key
+     * @returns {boolean}
+     * @example db.has("foo");
+     */
     has(key) {
         return this.exists(key);
     }
@@ -116,7 +116,7 @@ class MemoryStorage {
      *     console.log(`File exported to ${path}`);
      * });
      */
-    export(fileName="database", path="./") {
+    export(fileName = "database", path = "./") {
         if (typeof fileName !== "string") throw new Error("File name must be a string!");
         if (typeof path !== "string") throw new Error("File path must be a string!");
 

@@ -17,7 +17,7 @@ class Database extends Base {
      * @example const { Database } = require("quickmongo");
      * const db = new Database("mongodb://localhost/quickmongo");
      */
-    constructor(mongodbURL, name, connectionOptions={}) {
+    constructor(mongodbURL, name, connectionOptions = {}) {
         super(mongodbURL, connectionOptions);
 
         /**
@@ -119,7 +119,7 @@ class Database extends Base {
 
     /**
      * Returns everything from the database
-     * @returns {Promise<Array>}
+     * @returns {Promise<any[]>}
      * @example let data = await db.all();
      * console.log(`There are total ${data.length} entries.`);
      */
@@ -141,7 +141,7 @@ class Database extends Base {
      */
     async deleteAll() {
         this.emit("debug", "Deleting everything from the database...");
-        await this.schema.deleteMany().catch(e => {});
+        await this.schema.deleteMany().catch(() => {});
         return true;
     }
 
@@ -249,7 +249,7 @@ class Database extends Base {
      *     console.log(`File exported to ${path}`);
      * });
      */
-    export(fileName="database", path="./") {
+    export(fileName = "database", path = "./") {
         if (typeof fileName !== "string") throw new Error("File name must be a string!");
         if (typeof path !== "string") throw new Error("File path must be a string!");
 
@@ -274,11 +274,11 @@ class Database extends Base {
      * @param {Array} data Array of data
      * @example const data = QuickDB.all(); // imports data from quick.db to quickmongo
      * QuickMongo.import(data);
-     * @returns {Promise<Boolean>}
+     * @returns {Promise<void>}
      */
-    async import(data=[]) {
+    async import(data = []) {
         if (!Array.isArray(data)) throw new Error("Data type must be Array.", "DataTypeError");
-        if (data.length < 1) return [];
+        if (data.length < 1) return;
         let start = Date.now();
         this.emit("debug", `Queued ${data.length} entries!`);
         data.forEach((item, index) => {
@@ -417,13 +417,13 @@ class Database extends Base {
     /**
      * Pushes an item into array
      * @param {string} key key
-     * @param {any|Array} value Value to push
+     * @param {any|any[]} value Value to push
      * @example db.push("users", "John"); // -> ["John"]
      * db.push("users", ["Milo", "Simon", "Kyle"]); // -> ["John", "Milo", "Simon", "Kyle"]
      */
     async push(key, value) {
         const data = await this.get(key);
-        if (data == null) {
+        if (data === null) {
             if (!Array.isArray(value)) return await this.set(key, [value]);
             return await this.set(key, value);
         }
@@ -436,7 +436,7 @@ class Database extends Base {
     /**
      * Removes an item from array
      * @param {string} key key
-     * @param {any|Array} value item to remove
+     * @param {any|any[]} value item to remove
      * @example db.pull("users", "John"); // -> ["Milo", "Simon", "Kyle"]
      * db.pull("users", ["Milo", "Simon"]); // -> ["Kyle"]
      */

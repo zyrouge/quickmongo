@@ -11,7 +11,7 @@ class Base extends EventEmitter {
      * @param {object} connectionOptions Mongodb connection options
      * @example const db = new Base("mongodb://localhost/mydb");
      */
-    constructor(mongodbURL, connectionOptions={}) {
+    constructor(mongodbURL, connectionOptions = {}) {
         super();
         if (!mongodbURL || !mongodbURL.startsWith("mongodb")) throw new Error("No mongodb url was provided!");
         if (typeof mongodbURL !== "string") throw new Error(`Expected a string for mongodbURL, received ${typeof mongodbURL}`);
@@ -48,11 +48,11 @@ class Base extends EventEmitter {
      * Creates mongodb connection
      * @ignore
      */
-    _create(url) {
+    async _create(url) {
         this.emit("debug", "Creating database connection...");
         if (url && typeof url === "string") this.dbURL = url;
         if (!this.dbURL || typeof this.dbURL !== "string") throw new Error("Database url was not provided!", "MongoError");
-        mongoose.connect(this.dbURL, {
+        await mongoose.connect(this.dbURL, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
@@ -62,8 +62,8 @@ class Base extends EventEmitter {
      * Destroys database
      * @ignore
      */
-    _destroyDatabase() {
-        mongoose.disconnect();
+    async _destroyDatabase() {
+        await mongoose.disconnect();
         this.readyAt = undefined;
         this.dbURL = null;
         this.emit("debug", "Database disconnected!");

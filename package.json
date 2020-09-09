@@ -3,9 +3,11 @@
   "version": "1.0.9",
   "description": "Quick mongodb wrapper for beginners.",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "docsgen": "jsdoc --configure .jsdoc.json --verbose",
-    "test": "cd test && node test.js"
+    "test": "cd test && node test.js",
+    "tstest": "cd test/ts && tsc test.ts && node test.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +31,8 @@
     "mongoose": "^5.9.25"
   },
   "devDependencies": {
+    "@types/mongoose": "^5.7.36",
+    "@types/node": "^14.6.4",
     "jsdoc": "^3.6.5",
     "jsdoc-skyceil": "github:Zyrouge/jsdoc-skyceil"
   }
